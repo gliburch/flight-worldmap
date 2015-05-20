@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>jVectorMap demo</title>
+<link rel="stylesheet" media="all" href="assets/css/jquery-jvectormap-2.0.1.css" />
+<script src="assets/js/jquery-1.11.1.min.js"></script>
+<script src="assets/js/jquery-jvectormap-2.0.1.min.js"></script>
+<script src="assets/js/jquery-jvectormap-world-mill-en.js"></script>
+<script src="assets/js/jquery-jvectormap-custom.js"></script>
+<style>
+
+  #world {
+    position:absolute;
+    top:0;
+    right:300px;
+    bottom:0;
+    left:0;
+  }
+  #options {
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    width:260px;
+    padding:20px;
+    line-height:180%;
+    border-left:1px solid #444;
+    background-color:#111;
+  }
+  #options h1 {
+    color:#999;
+  }
+  #options button {
+    display:block;
+    margin-bottom:10px;
+    padding:4px;
+    border-radius:2px;
+    border:none;
+    background-color:#ccc;
+    cursor:pointer;
+  }
+  #options button:focus {
+    background-color:#fff;
+  }
+  
+</style>
+</head>
+<body>
+
+<div id="world"></div>
+
+<div id="options">
+  <h1>Flight Demo</h1>
+  <button id="focus-single">특정 지역(한국) 포커스 + 레이어 on</button>
+  <button id="focus-multiple">특정 구간(한국-필리핀) 포커스 + 레이어 on</button>
+  <button id="focus-coords">특정 좌표(N35°, E120°) 포커스 + 레이어 on</button>
+  <button id="regions-clear">지역 초기화 + 레이어 off</button>
+  <br>
+  <button id="route1">마커 추가 + 레이어 on</button>
+  <button id="route2">마커그룹1 추가 + 레이어 on + Vietjet Air</button>
+  <button id="route3-1">마커그룹2 추가 + 레이어 on + Philippines Air</button>
+  <button id="route3-2">마커그룹2 존재할 때 Philippines Air</button>
+  <button id="routes-clear">마커 초기화 + 레이어 off</button>
+  <br>
+  <button id="destroy">몽땅 초기화</button>
+  <br>
+  <!-- <label><input id="lock-buttons" type="checkbox" checked="checked"> 애니메이션 중 제스쳐 잠금(임시)<label> -->
+</div>
+
+<script>
+
+  $(function() {
+
+    $('#focus-single').click(function(){
+      map.__.smoothFocus({region: 'KR', animate: true});
+      map.__.callRegionPopup(this.textContent);
+    });
+
+    $('#focus-multiple').click(function(){
+      map.__.smoothFocus({regions: ['FR', 'PH'], animate: true});
+      map.__.callRegionPopup(this.textContent);
+    });
+
+    $('#focus-coords').click(function(){
+      map.__.smoothFocus({scale: 3, lat: 20, lng: 120, animate: true});
+      map.__.callRegionPopup(this.textContent);
+    });
+
+    $('#route1').on('click', function(){
+      map.__.addMarkersAndFocus('route1', '#fff', {
+        '인천': [37.56, 126.80]
+      });
+      map.__.callRegionPopup(this.textContent);
+    });
+
+    $('#route2').on('click', function(){
+      map.__.addMarkersAndFocus('route2', '#fff', {
+        '인천': [37.56, 126.80],
+        '모스크바': [55.65, 37.44],
+        '파리': [48.81, 2.32],
+        '뉴욕': [40.42, -74.00],
+        '산타크루즈': [-17.92, -62.97],
+        '부산': [35.17, 128.91],
+      });
+      map.__.callRegionPopup(this.textContent);
+      map.__.drawFlightOnRoute('route2', 'VJ');
+    });
+
+    $('#route3-1').on('click', function(){
+      map.__.addMarkersAndFocus('route3', '#fff', {
+        '부산': [35.17, 128.91],
+        '파리': [48.81, 2.32],
+        '마닐라': [14.54, 121.04],
+      });
+      map.__.callRegionPopup(this.textContent);
+      map.__.drawFlightOnRoute('route3', 'PR');
+    });
+
+    $('#route3-2').on('click', function(){
+      map.__.drawFlightOnRoute('route3', 'PR');
+    });
+
+    $('#regions-clear').on('click', function() {
+      map.clearSelectedRegions();
+      map.__.removeRegionPopup();
+    });
+
+    $('#routes-clear').on('click', function() {
+      map.removeAllMarkers();
+      map.__.removeRegionPopup();
+    });
+
+    $('#destroy').on('click', function() {
+      map.removeAllMarkers();
+      map.__.removeRegionPopup();
+      map.__.smoothFocus({scale: 1, x: 0.5, y: 0.5, animate: true});
+    });
+
+  });
+
+</script>
+
+</body>
+</html>
